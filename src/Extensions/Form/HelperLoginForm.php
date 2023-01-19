@@ -4,6 +4,7 @@ namespace Liumenggit\Helper\Extensions\Form;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Widgets\Form;
+use Liumenggit\Helper\Models\AdminSettings;
 use Symfony\Component\HttpFoundation\Response;
 
 class HelperLoginForm extends Form
@@ -13,31 +14,37 @@ class HelperLoginForm extends Form
     {
 
 //        $this->response()->error('Your error message.');
-        $this->response()->success('Processed successfully.')->refresh();
+//        成功添加token
+        AdminSettings::firstOrCreate([
+            'slug' => 'liumenggit.helper',
+            'value' => [
+                'token' => 32,
+            ]
+        ]);
 
-        return ['status' => 1, 'message' => '消息'];
+        return $this->response()->success('登录成功')->refresh();
     }
 
-    protected function savedScript()
-    {
-        return <<<JS
-        // data 为接口返回数据
-        if (! data.status) {
-            Dcat.error(data.message);
-
-            return false;
-        }
-        sessionStorage.setItem("key","windows");
-        Dcat.success(data.message);
-
-        if (data.redirect) {
-            Dcat.reload(data.redirect)
-        }
-
-        // 中止后续逻辑（默认逻辑）
-        return false;
-JS;
-    }
+//    protected function savedScript()
+//    {
+//        return <<<JS
+//        // data 为接口返回数据
+//        if (! data.status) {
+//            Dcat.error(data.message);
+//
+//            return false;
+//        }
+//        sessionStorage.setItem("key","windows");
+//        Dcat.success(data.message);
+//
+//        if (data.redirect) {
+//            Dcat.reload(data.redirect)
+//        }
+//
+//        // 中止后续逻辑（默认逻辑）
+//        return false;
+//JS;
+//    }
 
     // 构建表单
     public function form()

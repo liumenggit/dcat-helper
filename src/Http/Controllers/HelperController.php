@@ -13,6 +13,7 @@ use Liumenggit\Helper\Extensions\Form\HelperLoginForm;
 use Liumenggit\Helper\Extensions\Grid\HelperShare;
 use Liumenggit\Helper\Extensions\Grid\Tools\HelperLogin;
 use Liumenggit\Helper\Http\Repositories\Helper;
+use Liumenggit\Helper\Models\AdminSettings;
 use Liumenggit\Helper\Models\Helper as Helpers;
 use Dcat\Admin\Widgets\Modal;
 
@@ -26,6 +27,7 @@ class HelperController extends AdminController
 
     protected function grid()
     {
+        AdminSettings::where('slug', 'liumenggit.helper')->first();
         return Grid::make(new Helper(), function (Grid $grid) {
             $grid->setActionClass(TextActions::class);
             $grid->actions(function (Grid\Displayers\Actions $actions) {
@@ -38,23 +40,26 @@ class HelperController extends AdminController
             $grid->toolsWithOutline(false); //列表主题反向
             $grid->disableRowSelector(); //禁用行选择器
             $grid->disableFilterButton(); //禁用过滤器按钮
-
+            $Token = AdminSettings::where('slug', 'liumenggit.helper')->first()->value['token'];
             $grid->actions(function (Grid\Displayers\Actions $actions) {
                 // append一个操作
-                $actions->append(new HelperShare(Helpers::class));
+                $Token = AdminSettings::where('slug', 'liumenggit.helper')->first()->value['token'];
+                $actions->append(new HelperShare(Helpers::class, $Token));
             });
 
 //            $grid->tools(new HelperLogin());
 
-            $modal = Modal::make()
-                ->lg()
-                ->title('登录')
-                ->body(HelperLoginForm::make())
-                ->button('登录');
-            <<<JS
-console.log('中间插入js')
-JS;
-            $grid->tools($modal);
+//            dd();
+
+            if (!$Token) {
+                $modal = Modal::make()
+                    ->lg()
+                    ->title('登录')
+                    ->body(HelperLoginForm::make())
+                    ->button('登录');
+                $grid->tools($modal);
+            }
+//            $grid->tools($value);
 //            $grid->export();
 //            $grid->column('id')->sortable();
             $grid->column('name', '名称');
@@ -102,7 +107,7 @@ JS;
                 $tools->disableDelete();
             });
 
-            $form->text('name')->updateRules('required|regex:/^\w+$/', [
+            $form->text('name')->updateRules('required | regex:/^\w + $/', [
                 'regex' => '只允许英文',
             ]);
             $form->table('args', '参数', function (NestedForm $table) {

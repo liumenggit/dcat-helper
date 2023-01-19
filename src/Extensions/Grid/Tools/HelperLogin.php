@@ -4,6 +4,7 @@ namespace Liumenggit\Helper\Extensions\Grid\Tools;
 
 use Dcat\Admin\Grid\Tools\AbstractTool;
 use Illuminate\Http\Request;
+use Liumenggit\Helper\Models\AdminSettings;
 
 class HelperLogin extends AbstractTool
 {
@@ -48,8 +49,8 @@ class HelperLogin extends AbstractTool
     public function handle(Request $request)
     {
         // 你的代码逻辑
-
-        return $this->response()->success('发送成功')->refresh();
+        
+        return $this->response()->success('发送成功2')->refresh();
     }
 
     /**

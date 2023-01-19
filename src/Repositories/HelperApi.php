@@ -7,6 +7,7 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Repositories\Repository;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Liumenggit\Helper\Models\AdminSettings;
 
 class HelperApi extends Repository
 {
@@ -25,10 +26,13 @@ class HelperApi extends Repository
 
         $start = ($currentPage - 1) * $perPage;
 
+        $Token = AdminSettings::where('slug', 'liumenggit.helper')->first()->value['token'];
+
         $client = new \GuzzleHttp\Client();
 
-        //$response = $client->get("{$this->api}?{$this->apiKey}&city={$city}&start=$start&count=$perPage");
-        //$data = json_decode((string)$response->getBody(), true);
+//        $response = $client->get('http://127.0.0.1:8000/api/helpres');
+//        $data = json_decode((string)$response->getBody(), true);
+//        dd($data);
         $data = [
             'total' => 1,
             'subjects' => [

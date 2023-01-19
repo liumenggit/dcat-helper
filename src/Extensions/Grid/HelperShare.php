@@ -8,10 +8,12 @@ use Illuminate\Http\Request;
 class HelperShare extends RowAction
 {
     protected $model;
+    protected $token;
 
-    public function __construct(string $model = null)
+    public function __construct(string $model = null, string $token = null)
     {
         $this->model = $model;
+        $this->token = $token;
     }
 
     /**
@@ -55,14 +57,16 @@ class HelperShare extends RowAction
 
         // 获取 parameters 方法传递的参数
         $model = $request->get('model');
+        $token = $request->get('token');
+
 
         // 复制数据
-        dd($model::find($id));
+        dd($model::find($id)->first(), $token);
 
         $client = new \GuzzleHttp\Client();
 
         $response = $client->get("{$this->api}?{$this->apiKey}&city={$city}&start=$start&count=$perPage");
-        $model::find($id);
+        $model::find($id)->first();
 
         // 返回响应结果并刷新页面
         return $this->response()->success("分享成功: [{$id}]")->refresh();
@@ -76,7 +80,8 @@ class HelperShare extends RowAction
     public function parameters()
     {
         return [
-            'model' => $this->model
+            'model' => $this->model,
+            'token' => $this->token
         ];
     }
 }
