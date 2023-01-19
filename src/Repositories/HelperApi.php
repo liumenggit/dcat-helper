@@ -33,16 +33,23 @@ class HelperApi extends Repository
             'total' => 1,
             'subjects' => [
                 [
-                    'title' => '盗梦空间',
-                    'images' => ['https://img9.doubanio.com/view/photo/s_ratio_poster/public/p2616355133.webp'],
-                    'year' => '2010',
-                    'rating' => '9.9',
-                    'directors' => [['name' => '克里斯托弗·诺兰']],
-                    'genres' => ['剧情', '科幻', '悬疑', '冒险'],
+                    'id' => 1,
+                    'name' => 'test',
+                    'args' => [
+                        [
+                            "key" => "name",
+                            "desc" => "返回名称",
+                            "value" => "名称"
+                        ]
+                    ],
+                    'script' => 'console.log(name);',
+                    'desc' => '描述信息',
+                    'status' => 1,
+                    'created_at' => '2023-01-19 00:00:00',
+                    'updated_at' => '2023-01-19 00:00:00',
                 ],
             ],
         ];
-
         return $model->makePaginator(
             $data['total'] ?? 0,
             $data['subjects'] ?? []

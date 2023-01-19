@@ -14,6 +14,17 @@ class Helper extends Model
     protected $casts = [
         'args' => 'array',
     ];
+//    protected $guarded = [];
+
+    protected $fillable = [
+        'name',
+        'script',
+        'args',
+        'status',
+        'desc',
+        'created_at',
+        'updated_at'
+    ];
 
     protected $table = 'dcat_helper';
 

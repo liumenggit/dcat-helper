@@ -49,13 +49,20 @@ class HelperServiceProvider extends ServiceProvider
 
     protected $menu = [
         [
+            'title' => '助手',
+            'uri' => '',
+            'icon' => 'fa-h-square',
+        ],
+        [
+            'parent' => '助手',
             'title' => '管理帮手',
             'uri' => 'helper',
-            'icon' => 'fa-align-justify', // 图标可以留空
+            'icon' => 'fa-file-code-o',
         ], [
+            'parent' => '助手',
             'title' => '获取帮手',
             'uri' => 'gethelper',
-            'icon' => 'fa-align-justify', // 图标可以留空
+            'icon' => 'fa-download',
         ]
     ];
 

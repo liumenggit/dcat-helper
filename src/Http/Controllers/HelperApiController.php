@@ -12,6 +12,9 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Layout\Content;
 
 
+use Liumenggit\Helper\Actions\Grid\TextActions;
+use Liumenggit\Helper\Extensions\Grid\HelperInstall;
+use Liumenggit\Helper\Models\Helper as Helpers;
 use Liumenggit\Helper\Repositories\HelperApi;
 
 class HelperApiController extends AdminController
@@ -39,38 +42,30 @@ class HelperApiController extends AdminController
     protected function grid($repository = null)
     {
         $grid = new Grid($repository ?: new HelperApi());
-
-        $grid->number();
-        $grid->title->display(function ($v) {
-            $v = '豆瓣API已停止对外开放...';
-
-            return sprintf('<a href="%s" target="_blank"><i>《%s》</i></a>', $this->alt, $v);
+        $grid->setActionClass(TextActions::class);
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            //操作功能的禁用
+            $actions->disableDelete();
+            $actions->disableEdit();
+            $actions->disableQuickEdit();
+            $actions->disableView();
         });
-        $grid->images->first()->image('', 100);
-        $grid->year;
-        $grid->rating->display(function ($v) {
-            $style = '';
-            $color = Admin::color();
-
-            if ($v < 3) {
-                $style = $color->alpha('primary', 0.4);
-            } elseif ($v >= 3 && $v < 7) {
-                $style = $color->alpha('primary', 0.6);
-            } elseif ($v >= 7 && $v < 8) {
-                $style = $color->alpha('primary', 0.8);
-            } elseif ($v >= 8 && $v < 9) {
-                $style = $color->primary();
-            } elseif ($v >= 9) {
-                $style = $color->primaryDarker();
-            }
-
-            return "<span class='badge' style='background:$style;color:#fff'>$v</span>";
+        $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $actions->append(new HelperInstall(Helpers::class));
         });
-        $grid->directors->pluck('name')->label('primary');
-        $grid->casts->pluck('name')->label('primary');
-        $grid->genres->label('success');
 
-        $grid->disableActions();
+        $grid->column('name', '名称');
+        $grid->column('args', '参数')->map(function ($path) {
+            return $path['key'];
+        })->label();
+        $grid->column('script', '代码')->limit(50);
+        $grid->column('desc', '描述')->limit(50);
+
+//        $grid->directors->pluck('name')->label('primary');
+//        $grid->casts->pluck('name')->label('primary');
+//        $grid->genres->label('success');
+
+//        $grid->disableActions();
         $grid->disableBatchDelete();
         $grid->disableCreateButton();
         $grid->disableFilterButton();

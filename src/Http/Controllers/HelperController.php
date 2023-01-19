@@ -7,10 +7,14 @@ use Dcat\Admin\Form\NestedForm;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Show;
+use Dcat\Admin\Widgets\Card;
 use Liumenggit\Helper\Actions\Grid\TextActions;
-use Liumenggit\Helper\Extensions\Grid\ExportJson;
+use Liumenggit\Helper\Extensions\Form\HelperLoginForm;
+use Liumenggit\Helper\Extensions\Grid\HelperShare;
+use Liumenggit\Helper\Extensions\Grid\Tools\HelperLogin;
 use Liumenggit\Helper\Http\Repositories\Helper;
 use Liumenggit\Helper\Models\Helper as Helpers;
+use Dcat\Admin\Widgets\Modal;
 
 class HelperController extends AdminController
 {
@@ -19,6 +23,7 @@ class HelperController extends AdminController
      *
      * @return Grid
      */
+
     protected function grid()
     {
         return Grid::make(new Helper(), function (Grid $grid) {
@@ -36,8 +41,20 @@ class HelperController extends AdminController
 
             $grid->actions(function (Grid\Displayers\Actions $actions) {
                 // append一个操作
-                $actions->append(new ExportJson(Helpers::class));
+                $actions->append(new HelperShare(Helpers::class));
             });
+
+//            $grid->tools(new HelperLogin());
+
+            $modal = Modal::make()
+                ->lg()
+                ->title('登录')
+                ->body(HelperLoginForm::make())
+                ->button('登录');
+            <<<JS
+console.log('中间插入js')
+JS;
+            $grid->tools($modal);
 //            $grid->export();
 //            $grid->column('id')->sortable();
             $grid->column('name', '名称');
